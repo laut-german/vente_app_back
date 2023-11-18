@@ -1,9 +1,11 @@
 export interface UserProps {
   id?: string;
+  uid?: string;
   name: string;
   email: string;
   profilePicture?: string;
   language: string;
+  password?: string;
 }
 
 export class User {
@@ -37,12 +39,20 @@ export class User {
     return this.props.language;
   }
 
+  get password() {
+    return this.props.password;
+  }
+
   private set language(language: string) {
     this.props.language = language;
   }
 
   get id() {
     return this.props.id;
+  }
+
+  get uid() {
+    return this.props.uid;
   }
 
   private set id(uid: string) {

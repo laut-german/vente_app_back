@@ -27,6 +27,7 @@ export class UserController {
         createUserDto.name,
         createUserDto.email,
         createUserDto.language,
+        createUserDto.password,
       ),
     );
     return plainToClass(CreateUserOutDto, applicationDTO);

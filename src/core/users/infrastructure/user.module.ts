@@ -6,6 +6,8 @@ import { UserDocument, UserSchema } from "./store/schemas/user.schema";
 import { USER_REPOSITORY } from "@users/domain/storage/user.repository";
 import { MongoUserRepository } from "@users/infrastructure/store/repositories/mongo-user.repository";
 import { CreateUserCommandHandler } from "@users/application/commands/create-user.command";
+import { ACCOUNT_REPOSITORY } from "@users/domain/storage/account.repository";
+import { FirebaseAccountRepository } from "@users/infrastructure/store/repositories/firebase-account.repository";
 
 @Module({
   imports: [
@@ -19,6 +21,10 @@ import { CreateUserCommandHandler } from "@users/application/commands/create-use
     {
       provide: USER_REPOSITORY,
       useClass: MongoUserRepository,
+    },
+    {
+      provide: ACCOUNT_REPOSITORY,
+      useClass: FirebaseAccountRepository,
     },
     CreateUserCommandHandler,
   ],
