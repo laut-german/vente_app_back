@@ -15,11 +15,12 @@ import {
   AccountRepository,
 } from "../../domain/storage/account.repository";
 import { FirebaseAccountNotCreatedError } from "../../domain/errors/firebase-account-not-created.error";
+import { LanguageEnum } from "@users/domain/enums/language.enum";
 export class CreateUserCommand {
   constructor(
     public readonly name: string,
     public readonly email: string,
-    public readonly language: string,
+    public readonly language: LanguageEnum,
     public readonly password: string,
   ) {}
 }

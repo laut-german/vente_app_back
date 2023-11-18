@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString, IsEmail } from "class-validator";
+import { IsNotEmpty, IsString, IsEmail, IsEnum } from "class-validator";
+import { LanguageEnum } from "@users/domain/enums/language.enum";
 export class CreateUserInDto {
   @IsNotEmpty()
   @IsString()
@@ -8,8 +9,8 @@ export class CreateUserInDto {
   @IsString()
   email: string;
   @IsNotEmpty()
-  @IsString()
-  language: string;
+  @IsEnum(LanguageEnum)
+  language: LanguageEnum;
   @IsNotEmpty()
   @IsString()
   password: string;

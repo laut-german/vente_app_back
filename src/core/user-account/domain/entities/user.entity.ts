@@ -1,10 +1,12 @@
+import { LanguageEnum } from "@users/domain/enums/language.enum";
+
 export interface UserProps {
   id?: string;
   uid?: string;
   name: string;
   email: string;
   profilePicture?: string;
-  language: string;
+  language: LanguageEnum;
   password?: string;
 }
 
@@ -43,7 +45,7 @@ export class User {
     return this.props.password;
   }
 
-  private set language(language: string) {
+  private set language(language: LanguageEnum) {
     this.props.language = language;
   }
 

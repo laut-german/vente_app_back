@@ -1,7 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { PORT } from "./utils/conf.properties";
-import { Logger } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { ConfigAux } from "./utils/config.aux";
 import * as admin from "firebase-admin";
 import * as dotenv from "dotenv";
@@ -17,7 +17,7 @@ async function bootstrap() {
   } catch (error) {
     logger.error(`Error initializing firebase app: ${error}`);
   }
-
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(PORT);
   logger.verbose(`Started listen PORT: ${PORT || 3000}`);
 }

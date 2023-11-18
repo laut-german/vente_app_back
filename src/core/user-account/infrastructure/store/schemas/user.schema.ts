@@ -1,6 +1,7 @@
 import { Schema, Prop, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
+import { LanguageEnum } from "@users/domain/enums/language.enum";
 
 @Schema({ collection: "users", timestamps: true })
 export class UserDocument extends Document {
@@ -29,7 +30,7 @@ export class UserDocument extends Document {
   fcmToken: string[];
   @Prop({ required: false, type: Date })
   lastVisit: Date;
-  @Prop({ type: String, default: "es" })
-  language: string;
+  @Prop({ type: String, default: LanguageEnum.es_ES })
+  language: LanguageEnum;
 }
 export const UserSchema = SchemaFactory.createForClass(UserDocument);
