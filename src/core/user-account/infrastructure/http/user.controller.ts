@@ -3,8 +3,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { CreateUserInDto } from "./common-dtos/crete-user-in.dto";
 import { CreateUserOutDto } from "./common-dtos/create-user-out.dto";
-import { CreateUserCommand } from "@users/application/commands/create-user.command";
-import { UserResponse } from "@users/application/responses/user.response";
+import { CreateUserCommand } from "../../application/commands/create-user.command";
+import { UserResponse } from "../../application/responses/user.response";
 import { plainToClass } from "class-transformer";
 
 @ApiTags("v1/users")

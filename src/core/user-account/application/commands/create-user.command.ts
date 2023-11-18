@@ -3,18 +3,18 @@ import { Inject } from "@nestjs/common";
 import {
   USER_REPOSITORY,
   UserRepository,
-} from "@users/domain/storage/user.repository";
-import { UserEmailAlreadyExists } from "@users/domain/errors/user-email-already-exists.error";
-import { User } from "@users/domain/entities/user.entity";
+} from "../../domain/storage/user.repository";
+import { UserEmailAlreadyExists } from "../../domain/errors/user-email-already-exists.error";
+import { User } from "../../domain/entities/user.entity";
 import {
   UserResponse,
   userResponseFromDomain,
-} from "@users/application/responses/user.response";
+} from "../../application/responses/user.response";
 import {
   ACCOUNT_REPOSITORY,
   AccountRepository,
-} from "@users/domain/storage/account.repository";
-import { FirebaseAccountNotCreatedError } from "@users/domain/errors/firebase-account-not-created.error";
+} from "../../domain/storage/account.repository";
+import { FirebaseAccountNotCreatedError } from "../../domain/errors/firebase-account-not-created.error";
 export class CreateUserCommand {
   constructor(
     public readonly name: string,

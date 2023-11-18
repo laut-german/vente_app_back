@@ -1,7 +1,7 @@
 import { AccountRepository } from "@users/domain/storage/account.repository";
 import admin, { auth } from "firebase-admin";
 import UserRecord = auth.UserRecord;
-
+import DecodedIdToken = auth.DecodedIdToken;
 export class FirebaseAccountRepository implements AccountRepository {
   constructor() {}
   async createUserAccount(
@@ -16,5 +16,9 @@ export class FirebaseAccountRepository implements AccountRepository {
       returnSecureToken: true,
     };
     return await admin.app().auth().createUser(firebaseUser);
+  }
+
+  async verifyIdToken(token: string): Promise<DecodedIdToken> {
+    return await admin.app().auth().verifyIdToken(token, true);
   }
 }

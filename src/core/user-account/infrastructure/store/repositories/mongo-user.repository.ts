@@ -1,8 +1,8 @@
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { UserDocument } from "../schemas/user.schema";
-import { UserRepository } from "@users/domain/storage/user.repository";
-import { User } from "@users/domain/entities/user.entity";
+import { UserRepository } from "../../../domain/storage/user.repository";
+import { User } from "../../../domain/entities/user.entity";
 import { UserMapper } from "../schemas/user.mapper";
 export class MongoUserRepository implements UserRepository {
 
@@ -27,20 +27,8 @@ export class MongoUserRepository implements UserRepository {
     return userDocument ? this.mapper.toEntity(userDocument) : undefined;
   }
 
-  async findUserByEmail(email: string): Promise<Partial<User>> {
+  async findUserByEmail(email: string): Promise<User> {
     const userDocument = await this.userModel.findOne({ email });
     return userDocument ? this.mapper.toEntity(userDocument) : undefined;
   }
-
-  // async save(user: User): Promise<User> {
-  //   const savedUser = await this.userModel.findByIdAndUpdate(
-  //     user.id,
-  //     {
-  //       name: user.name,
-  //       email: user.email,
-  //     },
-  //     { new: true },
-  //   );
-  //   return new User(savedUser.toObject());
-  // }
 }
