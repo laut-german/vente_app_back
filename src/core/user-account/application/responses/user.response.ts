@@ -5,7 +5,7 @@ export interface UserResponse {
   id: string;
   name: string;
   email: string;
-  language: LanguageEnum,
+  language: LanguageEnum;
   profilePicture: string;
 }
 

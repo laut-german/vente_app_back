@@ -7,15 +7,15 @@ import { CreateUserCommand } from "../../application/commands/create-user.comman
 import { UserResponse } from "../../application/responses/user.response";
 import { plainToClass } from "class-transformer";
 
-@ApiTags("v1/users")
-@Controller("v1/users")
+@ApiTags("v1/user-account")
+@Controller("v1/user-account")
 export class UserController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Post("register-user")
+  @Post("register")
   async createUser(
     @Body() createUserDto: CreateUserInDto,
   ): Promise<CreateUserOutDto> {
