@@ -1,10 +1,10 @@
-import { AccountRepository } from "@users/domain/storage/account.repository";
+import { AuthProviderRepository } from "@users/domain/storage/auth-provider.repository";
 import admin, { auth } from "firebase-admin";
 import UserRecord = auth.UserRecord;
 import DecodedIdToken = auth.DecodedIdToken;
-export class FirebaseAccountRepository implements AccountRepository {
+export class FirebaseProviderRepository implements AuthProviderRepository {
   constructor() {}
-  async createUserAccount(
+  async createAccount(
     name: string,
     email: string,
     password: string,

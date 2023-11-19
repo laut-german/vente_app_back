@@ -18,6 +18,7 @@ async function bootstrap() {
     logger.error(`Error initializing firebase app: ${error}`);
   }
   app.useGlobalPipes(new ValidationPipe());
+  app.enableCors();
   await app.listen(PORT);
   logger.verbose(`Started listen PORT: ${PORT || 3000}`);
 }

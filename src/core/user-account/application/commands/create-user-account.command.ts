@@ -1,22 +1,22 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Inject } from "@nestjs/common";
 import {
-  USER_REPOSITORY,
-  UserRepository,
-} from "../../domain/storage/user.repository";
+  USER_ACCOUNT_REPOSITORY,
+  UserAccountRepository,
+} from "../../domain/storage/user-account.repository";
 import { UserEmailAlreadyExists } from "../../domain/errors/user-email-already-exists.error";
-import { User } from "../../domain/entities/user.entity";
+import { UserAccount } from "../../domain/entities/user-account.entity";
 import {
-  UserResponse,
+  UserAccountResponse,
   userResponseFromDomain,
-} from "../../application/responses/user.response";
+} from "../responses/user-account.response";
 import {
-  ACCOUNT_REPOSITORY,
-  AccountRepository,
-} from "../../domain/storage/account.repository";
+  AUTH_PROVIDER_REPOSITORY,
+  AuthProviderRepository,
+} from "../../domain/storage/auth-provider.repository";
 import { FirebaseAccountNotCreatedError } from "../../domain/errors/firebase-account-not-created.error";
 import { LanguageEnum } from "@users/domain/enums/language.enum";
-export class CreateUserCommand {
+export class CreateUserAccountCommand {
   constructor(
     public readonly name: string,
     public readonly email: string,
@@ -25,15 +25,15 @@ export class CreateUserCommand {
   ) {}
 }
 
-@CommandHandler(CreateUserCommand)
+@CommandHandler(CreateUserAccountCommand)
 export class CreateUserCommandHandler
-  implements ICommandHandler<CreateUserCommand, UserResponse> {
-
+  implements ICommandHandler<CreateUserAccountCommand, UserAccountResponse>
+{
   constructor(
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepository,
-    @Inject(ACCOUNT_REPOSITORY)
-    private accountRepository: AccountRepository,
+    @Inject(USER_ACCOUNT_REPOSITORY)
+    private readonly userAccountRepository: UserAccountRepository,
+    @Inject(AUTH_PROVIDER_REPOSITORY)
+    private authProviderRepository: AuthProviderRepository,
   ) {}
 
   async execute({
@@ -41,14 +41,15 @@ export class CreateUserCommandHandler
     email,
     language,
     password,
-  }: CreateUserCommand): Promise<UserResponse> {
-    const emailExists = await this.userRepository.findUserByEmail(email);
+  }: CreateUserAccountCommand): Promise<UserAccountResponse> {
+    const emailExists =
+      await this.userAccountRepository.findUserAccountByEmail(email);
     if (emailExists) {
       throw new UserEmailAlreadyExists(email);
     }
     let userAccount;
     try {
-      userAccount = await this.accountRepository.createUserAccount(
+      userAccount = await this.authProviderRepository.createAccount(
         name,
         email,
         password,
@@ -60,8 +61,8 @@ export class CreateUserCommandHandler
     if (!userAccount) {
       throw new FirebaseAccountNotCreatedError(email);
     }
-    const user = await this.userRepository.createUser(
-      User.create({ name, email, language, uid: userAccount.uid }),
+    const user = await this.userAccountRepository.createUserAccount(
+      UserAccount.create({ name, email, language, uid: userAccount.uid }),
     );
     return userResponseFromDomain(user);
   }

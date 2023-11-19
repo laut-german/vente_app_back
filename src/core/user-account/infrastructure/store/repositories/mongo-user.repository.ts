@@ -1,17 +1,17 @@
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { UserDocument } from "../schemas/user.schema";
-import { UserRepository } from "../../../domain/storage/user.repository";
-import { User } from "../../../domain/entities/user.entity";
-import { UserMapper } from "../schemas/user.mapper";
-export class MongoUserRepository implements UserRepository {
+import { UserDocument } from "../schemas/user-account.schema";
+import { UserAccountRepository } from "@users/domain/storage/user-account.repository";
+import { UserAccount } from "@users/domain/entities/user-account.entity";
+import { UserAccountMapper } from "../schemas/user-account.mapper";
+export class MongoUserRepository implements UserAccountRepository {
 
-  private mapper = new UserMapper();
+  private mapper = new UserAccountMapper();
   constructor(
     @InjectModel(UserDocument.name) private userModel: Model<UserDocument>,
   ) {}
 
-  async createUser(newUser: User): Promise<User> {
+  async createUserAccount(newUser: UserAccount): Promise<UserAccount> {
     const userDocument = await new this.userModel({
       name: newUser.name,
       profilePicture: newUser.profilePicture,
@@ -22,13 +22,18 @@ export class MongoUserRepository implements UserRepository {
     return this.mapper.toEntity(userDocument);
   }
 
-  async findUserById(userId: string): Promise<User> {
+  async findUserAccountById(userId: string): Promise<UserAccount> {
     const userDocument = await this.userModel.findById(userId).exec();
     return userDocument ? this.mapper.toEntity(userDocument) : undefined;
   }
 
-  async findUserByEmail(email: string): Promise<User> {
+  async findUserAccountByEmail(email: string): Promise<UserAccount> {
     const userDocument = await this.userModel.findOne({ email });
+    return userDocument ? this.mapper.toEntity(userDocument) : undefined;
+  }
+
+  async findUserAccountByUid(uid: string): Promise<UserAccount> {
+    const userDocument = await this.userModel.findOne({ uid });
     return userDocument ? this.mapper.toEntity(userDocument) : undefined;
   }
 }

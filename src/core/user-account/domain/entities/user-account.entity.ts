@@ -10,7 +10,7 @@ export interface UserProps {
   password?: string;
 }
 
-export class User {
+export class UserAccount {
   constructor(private props: UserProps) {}
 
   get name() {
@@ -60,12 +60,12 @@ export class User {
   private set id(uid: string) {
     this.props.id = uid;
   }
-  update(props: Partial<User>) {
+  update(props: Partial<UserAccount>) {
     this.name = props.name || this.props.name;
     this.email = props.email || this.props.email;
   }
-  static create(props: UserProps): User {
-    return new User({
+  static create(props: UserProps): UserAccount {
+    return new UserAccount({
       ...props,
     });
   }

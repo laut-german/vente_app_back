@@ -2,9 +2,9 @@ import { auth } from "firebase-admin";
 import UserRecord = auth.UserRecord;
 import DecodedIdToken = auth.DecodedIdToken;
 
-export const ACCOUNT_REPOSITORY = Symbol();
-export interface AccountRepository {
-  createUserAccount(
+export const AUTH_PROVIDER_REPOSITORY = Symbol();
+export interface AuthProviderRepository {
+  createAccount(
     name: string,
     email: string,
     password: string,

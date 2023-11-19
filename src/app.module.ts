@@ -4,13 +4,13 @@ import * as dotenv from "dotenv";
 import { DB_STRING_CONNECTION } from "./utils/conf.properties";
 import { UserModule } from "@users/infrastructure/user.module";
 import { AuthService } from "@users/application/auth.service";
-import { EventModule } from "./core/event/infrastructure/event.module";
+import { MeetupModule } from "./core/meetup/infrastructure/meetup.module";
 dotenv.config();
 @Module({
   imports: [
     MongooseModule.forRoot(DB_STRING_CONNECTION),
     UserModule,
-    EventModule,
+    MeetupModule,
   ],
   controllers: [],
   providers: [],
@@ -20,7 +20,11 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(this.authService.createAuthenticationMiddleware())
-      .exclude("v1/users/register-user")
+      .exclude(
+        "v1/user-account/register",
+        "v1/user-account/register-sso",
+        "v1/user-account/:uid/exists",
+      )
       .forRoutes("/");
   }
 }

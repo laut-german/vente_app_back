@@ -7,22 +7,22 @@ import {
 } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
 import {
-  USER_REPOSITORY,
-  UserRepository,
-} from "@users/domain/storage/user.repository";
+  USER_ACCOUNT_REPOSITORY,
+  UserAccountRepository,
+} from "@users/domain/storage/user-account.repository";
 import {
-  ACCOUNT_REPOSITORY,
-  AccountRepository,
-} from "@users/domain/storage/account.repository";
+  AUTH_PROVIDER_REPOSITORY,
+  AuthProviderRepository,
+} from "@users/domain/storage/auth-provider.repository";
 import { StatusCodes, getReasonPhrase } from "http-status-codes";
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   constructor(
-    @Inject(USER_REPOSITORY)
-    private readonly userRepository: UserRepository,
-    @Inject(ACCOUNT_REPOSITORY)
-    private accountRepository: AccountRepository,
+    @Inject(USER_ACCOUNT_REPOSITORY)
+    private readonly userAccountRepository: UserAccountRepository,
+    @Inject(AUTH_PROVIDER_REPOSITORY)
+    private authProviderRepository: AuthProviderRepository,
   ) {}
   createAuthenticationMiddleware(): NestMiddleware["use"] {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -35,10 +35,11 @@ export class AuthService {
         if (!token) {
           throw new ForbiddenException("no auth token sent");
         }
-        const decodedToken = await this.accountRepository.verifyIdToken(token);
-        const currentUser = await this.userRepository.findUserByEmail(
-          decodedToken.email,
-        );
+        const decodedToken =
+          await this.authProviderRepository.verifyIdToken(token);
+        const currentUser = await this.userAccountRepository.findUserAccountByEmail(
+            decodedToken.email,
+          );
         if (!currentUser)
           throw new ForbiddenException("user requested not found");
         next();

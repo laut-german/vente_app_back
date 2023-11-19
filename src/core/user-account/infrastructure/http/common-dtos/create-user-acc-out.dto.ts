@@ -1,6 +1,4 @@
-
-
-export class CreateUserOutDto {
+export class CreateUserAccOutDto {
   readonly id: string;
 
   readonly name: string;
@@ -8,7 +6,7 @@ export class CreateUserOutDto {
   readonly email: string;
 
   readonly profilePicture: string;
-  constructor(partial: Partial<CreateUserOutDto>) {
+  constructor(partial: Partial<CreateUserAccOutDto>) {
     Object.assign(this, partial);
   }
 }

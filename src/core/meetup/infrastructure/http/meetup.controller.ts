@@ -3,7 +3,7 @@ import { ApiTags } from "@nestjs/swagger";
 
 @ApiTags("v1/events")
 @Controller("v1/events")
-export class EventController {
+export class MeetupController {
   constructor() {}
   @Post("dummy")
   async dummy() {
