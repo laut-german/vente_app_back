@@ -36,4 +36,12 @@ export class MongoUserRepository implements UserAccountRepository {
     const userDocument = await this.userModel.findOne({ uid });
     return userDocument ? this.mapper.toEntity(userDocument) : undefined;
   }
+  async save(user: UserAccount): Promise<UserAccount> {
+    const userDocument = await this.userModel.findByIdAndUpdate(
+      user.id,
+      { user },
+      { new: true },
+    );
+    return userDocument ? this.mapper.toEntity(userDocument) : undefined;
+  }
 }

@@ -7,4 +7,5 @@ export interface UserAccountRepository {
   findUserAccountById(id: string): Promise<UserAccount>;
   findUserAccountByEmail(email: string): Promise<UserAccount>;
   findUserAccountByUid(uid: string): Promise<UserAccount>;
+  save(entity: UserAccount): Promise<UserAccount>;
 }

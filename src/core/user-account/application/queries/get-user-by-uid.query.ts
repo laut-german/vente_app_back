@@ -15,11 +15,12 @@ export class GetUserByUidQuery {
 }
 
 @QueryHandler(GetUserByUidQuery)
-export class GetUserByIdQueryHandler
+export class GetUserByUidQueryHandler
   implements IQueryHandler<GetUserByUidQuery, UserAccountResponse>
 {
   constructor(
-    @Inject(USER_ACCOUNT_REPOSITORY) private readonly userAccountRepository: UserAccountRepository,
+    @Inject(USER_ACCOUNT_REPOSITORY)
+    private readonly userAccountRepository: UserAccountRepository,
   ) {}
   async execute(query: GetUserByUidQuery): Promise<UserAccountResponse> {
     const userAccount = await this.userAccountRepository.findUserAccountByUid(

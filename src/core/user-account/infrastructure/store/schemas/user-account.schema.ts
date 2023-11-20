@@ -32,5 +32,7 @@ export class UserDocument extends Document {
   lastVisit: Date;
   @Prop({ type: String, default: LanguageEnum.es_ES })
   language: LanguageEnum;
+  @Prop({ type: Boolean, default: false })
+  emailVerification: boolean;
 }
 export const UserAccountSchema = SchemaFactory.createForClass(UserDocument);

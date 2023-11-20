@@ -5,6 +5,7 @@ export interface UserProps {
   uid?: string;
   name: string;
   email: string;
+  emailVerification?: boolean;
   profilePicture?: string;
   language: LanguageEnum;
   password?: string;
@@ -51,6 +52,10 @@ export class UserAccount {
 
   get id() {
     return this.props.id;
+  }
+
+  get emailVerification() {
+    return this.props.emailVerification;
   }
 
   get uid() {

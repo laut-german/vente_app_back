@@ -12,6 +12,7 @@ export class UserAccountMapper {
       email: document.email,
       profilePicture: document.profilePicture,
       language: document.language,
+      emailVerification: document.emailVerification,
     };
   }
 }

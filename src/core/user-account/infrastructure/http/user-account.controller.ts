@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Param } from "@nestjs/common";
+import { Body, Controller, Post, Get, Param, Patch } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { CreateUserAccInDto } from "./common-dtos/crete-user-acc-in.dto";
@@ -10,6 +10,9 @@ import { CreateUserSSOAccInDto } from "@users/infrastructure/http/common-dtos/cr
 import { CreateUserSSOAccountCommand } from "@users/application/commands/create-usersso-acc.command";
 import { GetUserByUidQuery } from "@users/application/queries/get-user-by-uid.query";
 import { CheckIfUserExistsOutDto } from "@users/infrastructure/http/common-dtos/check-if-user-exists-out.dto";
+import { EmailAccVerificationUpdateCommand } from "@users/application/commands/email-acc-verification-update.command";
+import { EmailVerificationUpdateResponse } from "@users/application/responses/email-verification-update.response";
+import { VerifyEmailOutDto } from "@users/infrastructure/http/common-dtos/verify-email-out.dto";
 
 @ApiTags("v1/user-account")
 @Controller("v1/user-account")
@@ -72,5 +75,18 @@ export class UserAccountController {
       UserAccountResponse
     >(new GetUserByUidQuery(uid));
     return new CheckIfUserExistsOutDto(userAccount);
+  }
+  @Patch(":id/verify-email")
+  @ApiOperation({ description: "set email verification to true" })
+  @ApiOkResponse({ type: [VerifyEmailOutDto] })
+  async updateVerificationMail(
+    @Param("id") id: string,
+  ): Promise<VerifyEmailOutDto> {
+    const emailVerificationUpdateResponse = await this.commandBus.execute<
+      EmailAccVerificationUpdateCommand,
+      EmailVerificationUpdateResponse
+    >(new EmailAccVerificationUpdateCommand(id, true));
+
+    return new VerifyEmailOutDto(emailVerificationUpdateResponse);
   }
 }
