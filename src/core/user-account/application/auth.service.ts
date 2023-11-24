@@ -37,7 +37,12 @@ export class AuthService {
         }
         const decodedToken =
           await this.authProviderRepository.verifyIdToken(token);
-        const currentUser = await this.userAccountRepository.findUserAccountByEmail(
+        if (!decodedToken.email_verified) {
+          this.logger.error(`Email not verified`);
+          throw new ForbiddenException("Access denied");
+        }
+        const currentUser =
+          await this.userAccountRepository.findUserAccountByEmail(
             decodedToken.email,
           );
         if (!currentUser)

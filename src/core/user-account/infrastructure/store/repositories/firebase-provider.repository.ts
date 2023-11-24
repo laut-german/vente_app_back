@@ -2,6 +2,7 @@ import { AuthProviderRepository } from "@users/domain/storage/auth-provider.repo
 import admin, { auth } from "firebase-admin";
 import UserRecord = auth.UserRecord;
 import DecodedIdToken = auth.DecodedIdToken;
+import { UpdateRequest } from "firebase-admin/lib/auth";
 export class FirebaseProviderRepository implements AuthProviderRepository {
   constructor() {}
   async createAccount(
@@ -14,8 +15,13 @@ export class FirebaseProviderRepository implements AuthProviderRepository {
       password,
       displayName: name,
       returnSecureToken: true,
+      emailVerified: true,
     };
     return await admin.app().auth().createUser(firebaseUser);
+  }
+
+  async updateAccount(uid: string, fields: UpdateRequest): Promise<UserRecord> {
+    return admin.app().auth().updateUser(uid, fields);
   }
 
   async verifyIdToken(token: string): Promise<DecodedIdToken> {

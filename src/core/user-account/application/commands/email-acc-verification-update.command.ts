@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { Inject } from "@nestjs/common";
+import {Inject, Logger} from "@nestjs/common";
 import {
   USER_ACCOUNT_REPOSITORY,
   UserAccountRepository,
@@ -14,9 +14,9 @@ import {
   AUTH_PROVIDER_REPOSITORY,
   AuthProviderRepository,
 } from "../../domain/storage/auth-provider.repository";
-import { LanguageEnum } from "@users/domain/enums/language.enum";
 import { UserAccountDoesNotExistError } from "@users/domain/errors/user-account-does-not-exist.error";
 import { emailVerificationResponseFromDomain } from "@users/application/responses/email-verification-update.response";
+import {FirebaseAccountNotUpdatedError} from "@users/domain/errors/firebase-account-not-updated.error";
 export class EmailAccVerificationUpdateCommand {
   constructor(
     public readonly id: string,
@@ -29,6 +29,7 @@ export class EmailAccVerificationUpdateCommandHandler
   implements
     ICommandHandler<EmailAccVerificationUpdateCommand, UserAccountResponse>
 {
+  private logger = new Logger(EmailAccVerificationUpdateCommandHandler.name);
   constructor(
     @Inject(USER_ACCOUNT_REPOSITORY)
     private readonly userAccountRepository: UserAccountRepository,
@@ -46,6 +47,15 @@ export class EmailAccVerificationUpdateCommandHandler
     if (!userAccount) {
       throw new UserAccountDoesNotExistError();
     }
+    try {
+      await this.authProviderRepository.updateAccount(userAccount.uid, {
+        emailVerified: true,
+      });
+    } catch (error) {
+      this.logger.error(`An error occurred, ${error}`);
+      throw new FirebaseAccountNotUpdatedError(userAccount.email);
+    }
+
     userAccount.update({ emailVerification });
     const updatedUser = await this.userAccountRepository.save(userAccount);
     return emailVerificationResponseFromDomain(updatedUser);

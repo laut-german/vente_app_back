@@ -39,7 +39,7 @@ export class UserAccountController {
         createUserDto.password,
       ),
     );
-    return plainToClass(CreateUserAccOutDto, userAccount);
+    return new CreateUserAccOutDto(userAccount);
   }
 
   @Post("register-sso")
@@ -62,7 +62,7 @@ export class UserAccountController {
         createUserDto.uid,
       ),
     );
-    return plainToClass(CreateUserAccOutDto, userAccount);
+    return new CreateUserAccOutDto(userAccount);
   }
   @Get(":uid/exists")
   @ApiOperation({

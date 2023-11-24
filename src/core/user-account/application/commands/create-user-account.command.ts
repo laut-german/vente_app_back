@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { Inject } from "@nestjs/common";
+import {Inject, Logger} from "@nestjs/common";
 import {
   USER_ACCOUNT_REPOSITORY,
   UserAccountRepository,
@@ -29,6 +29,7 @@ export class CreateUserAccountCommand {
 export class CreateUserCommandHandler
   implements ICommandHandler<CreateUserAccountCommand, UserAccountResponse>
 {
+  private logger = new Logger(CreateUserCommandHandler.name);
   constructor(
     @Inject(USER_ACCOUNT_REPOSITORY)
     private readonly userAccountRepository: UserAccountRepository,
@@ -55,6 +56,7 @@ export class CreateUserCommandHandler
         password,
       );
     } catch (error) {
+      this.logger.error(`An error occurred, ${error}`);
       throw new FirebaseAccountNotCreatedError(email);
     }
 

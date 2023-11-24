@@ -8,6 +8,7 @@ export class UserAccountMapper {
   private userDocumentToProps(document: UserDocument): UserProps {
     return {
       id: document.id,
+      uid: document.uid,
       name: document.name,
       email: document.email,
       profilePicture: document.profilePicture,
