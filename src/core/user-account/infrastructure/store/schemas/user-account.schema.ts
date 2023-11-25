@@ -3,6 +3,15 @@ import { Document } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import { LanguageEnum } from "@users/domain/enums/language.enum";
 
+export interface UserModel {
+  id: string;
+  uid: string;
+  name: string;
+  email: string;
+  profilePicture: string;
+  language: string;
+}
+
 @Schema({ collection: "user-accounts", timestamps: true })
 export class UserDocument extends Document {
   @Prop({
@@ -32,7 +41,5 @@ export class UserDocument extends Document {
   lastVisit: Date;
   @Prop({ type: String, default: LanguageEnum.es_ES })
   language: LanguageEnum;
-  @Prop({ type: Boolean, default: false })
-  emailVerification: boolean;
 }
 export const UserAccountSchema = SchemaFactory.createForClass(UserDocument);

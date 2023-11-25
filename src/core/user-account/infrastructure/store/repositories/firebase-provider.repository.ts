@@ -15,7 +15,7 @@ export class FirebaseProviderRepository implements AuthProviderRepository {
       password,
       displayName: name,
       returnSecureToken: true,
-      emailVerified: true,
+      emailVerified: false,
     };
     return await admin.app().auth().createUser(firebaseUser);
   }

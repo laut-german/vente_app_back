@@ -14,13 +14,25 @@ import { FirebaseProviderRepository } from "./store/repositories/firebase-provid
 import { AuthService } from "@users/application/auth.service";
 import { CreateUserSSOAccountCommandHandler } from "@users/application/commands/create-usersso-acc.command";
 import { GetUserByUidQueryHandler } from "@users/application/queries/get-user-by-uid.query";
-import { EmailAccVerificationUpdateCommand } from "@users/application/commands/email-acc-verification-update.command";
+import { EmailAccVerificationUpdateCommandHandler } from "@users/application/commands/email-acc-verification-update.command";
+import { EMAIL_VERIFICATION_REPOSITORY } from "@users/domain/storage/email-verification.repository";
+import { MongoVerificationEmailRepository } from "@users/infrastructure/store/repositories/mongo-verification-email.repository";
+import {
+  AccountEmailVerificationDocument,
+  EmailVerificationSchema,
+} from "@users/infrastructure/store/schemas/account-email-verification.schema";
 
 @Module({
   imports: [
     CqrsModule,
     MongooseModule.forFeature([
       { name: UserDocument.name, schema: UserAccountSchema },
+    ]),
+    MongooseModule.forFeature([
+      {
+        name: AccountEmailVerificationDocument.name,
+        schema: EmailVerificationSchema,
+      },
     ]),
   ],
   controllers: [UserAccountController],
@@ -33,10 +45,14 @@ import { EmailAccVerificationUpdateCommand } from "@users/application/commands/e
       provide: AUTH_PROVIDER_REPOSITORY,
       useClass: FirebaseProviderRepository,
     },
+    {
+      provide: EMAIL_VERIFICATION_REPOSITORY,
+      useClass: MongoVerificationEmailRepository,
+    },
     CreateUserCommandHandler,
     CreateUserSSOAccountCommandHandler,
     GetUserByUidQueryHandler,
-    EmailAccVerificationUpdateCommand,
+    EmailAccVerificationUpdateCommandHandler,
     AuthService,
   ],
   exports: [AuthService],

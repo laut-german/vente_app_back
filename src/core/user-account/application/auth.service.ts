@@ -15,9 +15,16 @@ import {
   AuthProviderRepository,
 } from "@users/domain/storage/auth-provider.repository";
 import { StatusCodes, getReasonPhrase } from "http-status-codes";
+import * as jwt from "jsonwebtoken";
+import { ConfigAux } from "../../../utils/config.aux";
+
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
+  private readonly jwtSecretKey = new ConfigAux(process.env).getValue(
+    "JWT_SECRET_KEY",
+  );
+
   constructor(
     @Inject(USER_ACCOUNT_REPOSITORY)
     private readonly userAccountRepository: UserAccountRepository,
@@ -70,6 +77,15 @@ export class AuthService {
         }
       }
     };
+  }
+
+  createEmailVerificationToken(id: string, email: string): string {
+    const payload = {
+      userAccountId: id,
+      email: email,
+    };
+
+    return jwt.sign(payload, this.jwtSecretKey, { expiresIn: "7d" });
   }
 
   private sendExceptionResponse(

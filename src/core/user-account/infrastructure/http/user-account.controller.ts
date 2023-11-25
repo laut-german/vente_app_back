@@ -1,11 +1,10 @@
-import { Body, Controller, Post, Get, Param, Patch } from "@nestjs/common";
+import {Body, Controller, Post, Get, Param, Patch, ParseBoolPipe} from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { CreateUserAccInDto } from "./common-dtos/crete-user-acc-in.dto";
 import { CreateUserAccOutDto } from "./common-dtos/create-user-acc-out.dto";
 import { CreateUserAccountCommand } from "../../application/commands/create-user-account.command";
-import { UserAccountResponse } from "../../application/responses/user-account.response";
-import { plainToClass } from "class-transformer";
+import { CrateUserAccountResponse } from "../../application/responses/crate-user-account.response";
 import { CreateUserSSOAccInDto } from "@users/infrastructure/http/common-dtos/create-usersso-acc-in.dto";
 import { CreateUserSSOAccountCommand } from "@users/application/commands/create-usersso-acc.command";
 import { GetUserByUidQuery } from "@users/application/queries/get-user-by-uid.query";
@@ -30,7 +29,7 @@ export class UserAccountController {
   ): Promise<CreateUserAccOutDto> {
     const userAccount = await this.commandBus.execute<
       CreateUserAccountCommand,
-      UserAccountResponse
+      CrateUserAccountResponse
     >(
       new CreateUserAccountCommand(
         createUserDto.name,
@@ -53,7 +52,7 @@ export class UserAccountController {
   ): Promise<CreateUserAccOutDto> {
     const userAccount = await this.commandBus.execute<
       CreateUserSSOAccountCommand,
-      UserAccountResponse
+      CrateUserAccountResponse
     >(
       new CreateUserSSOAccountCommand(
         createUserDto.name,
@@ -72,20 +71,21 @@ export class UserAccountController {
   async checkIfUserRegistered(@Param("uid") uid: string) {
     const userAccount = await this.queryBus.execute<
       GetUserByUidQuery,
-      UserAccountResponse
+      CrateUserAccountResponse
     >(new GetUserByUidQuery(uid));
     return new CheckIfUserExistsOutDto(userAccount);
   }
-  @Patch(":id/verify-email")
+  @Patch(":id/verify-email/:flag")
   @ApiOperation({ description: "set email verification to true" })
   @ApiOkResponse({ type: [VerifyEmailOutDto] })
   async updateVerificationMail(
     @Param("id") id: string,
+    @Param("flag", ParseBoolPipe) flag: boolean,
   ): Promise<VerifyEmailOutDto> {
     const emailVerificationUpdateResponse = await this.commandBus.execute<
       EmailAccVerificationUpdateCommand,
       EmailVerificationUpdateResponse
-    >(new EmailAccVerificationUpdateCommand(id, true));
+    >(new EmailAccVerificationUpdateCommand(id, flag));
 
     return new VerifyEmailOutDto(emailVerificationUpdateResponse);
   }

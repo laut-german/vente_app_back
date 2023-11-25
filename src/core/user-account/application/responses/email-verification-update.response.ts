@@ -1,4 +1,5 @@
-import { UserAccount } from "../../domain/entities/user-account.entity";
+import { EmailAccountVerification } from "@users/domain/entities/email-acc-verification.entitity";
+import { StatusEmailVerificationEnum } from "@users/domain/enums/status-email-verification.enum";
 
 export interface EmailVerificationUpdateResponse {
   id: string;
@@ -6,8 +7,8 @@ export interface EmailVerificationUpdateResponse {
 }
 
 export const emailVerificationResponseFromDomain = (
-  entity: UserAccount,
+  entity: EmailAccountVerification,
 ): EmailVerificationUpdateResponse => ({
-  id: entity.id.toString(),
-  emailVerification: entity.emailVerification,
+  id: entity.userAccountId.toString(),
+  emailVerification: entity.status === StatusEmailVerificationEnum.Verified,
 });

@@ -7,14 +7,14 @@ import {
 import { UserEmailAlreadyExists } from "../../domain/errors/user-email-already-exists.error";
 import { UserAccount } from "../../domain/entities/user-account.entity";
 import {
-  UserAccountResponse,
-  userResponseFromDomain,
-} from "../responses/user-account.response";
-import {
   AUTH_PROVIDER_REPOSITORY,
   AuthProviderRepository,
 } from "../../domain/storage/auth-provider.repository";
 import { LanguageEnum } from "@users/domain/enums/language.enum";
+import {
+  CreateUserSSOAccountResponse,
+  userSSOResponseFromDomain,
+} from "@users/application/responses/create-sso-user.response";
 export class CreateUserSSOAccountCommand {
   constructor(
     public readonly name: string,
@@ -26,7 +26,7 @@ export class CreateUserSSOAccountCommand {
 
 @CommandHandler(CreateUserSSOAccountCommand)
 export class CreateUserSSOAccountCommandHandler
-  implements ICommandHandler<CreateUserSSOAccountCommand, UserAccountResponse>
+  implements ICommandHandler<CreateUserSSOAccountCommand, CreateUserSSOAccountResponse>
 {
   constructor(
     @Inject(USER_ACCOUNT_REPOSITORY)
@@ -40,15 +40,16 @@ export class CreateUserSSOAccountCommandHandler
     email,
     language,
     uid,
-  }: CreateUserSSOAccountCommand): Promise<UserAccountResponse> {
+  }: CreateUserSSOAccountCommand): Promise<CreateUserSSOAccountResponse> {
     const emailExists =
       await this.userAccountRepository.findUserAccountByEmail(email);
     if (emailExists) {
       throw new UserEmailAlreadyExists(email);
     }
-    const user = await this.userAccountRepository.createUserAccount(
+    const userAccount = await this.userAccountRepository.createUserAccount(
       UserAccount.create({ name, email, language, uid }),
     );
-    return userResponseFromDomain(user);
+
+    return userSSOResponseFromDomain(userAccount);
   }
 }

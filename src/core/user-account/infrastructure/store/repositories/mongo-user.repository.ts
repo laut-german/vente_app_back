@@ -5,7 +5,6 @@ import { UserAccountRepository } from "@users/domain/storage/user-account.reposi
 import { UserAccount } from "@users/domain/entities/user-account.entity";
 import { UserAccountMapper } from "../schemas/user-account.mapper";
 export class MongoUserRepository implements UserAccountRepository {
-
   private mapper = new UserAccountMapper();
   constructor(
     @InjectModel(UserDocument.name) private userModel: Model<UserDocument>,
@@ -22,8 +21,8 @@ export class MongoUserRepository implements UserAccountRepository {
     return this.mapper.toEntity(userDocument);
   }
 
-  async findUserAccountById(userId: string): Promise<UserAccount> {
-    const userDocument = await this.userModel.findById(userId).exec();
+  async findUserAccountById(id: string): Promise<UserAccount> {
+    const userDocument = await this.userModel.findOne({ id }).exec();
     return userDocument ? this.mapper.toEntity(userDocument) : undefined;
   }
 
@@ -36,10 +35,11 @@ export class MongoUserRepository implements UserAccountRepository {
     const userDocument = await this.userModel.findOne({ uid });
     return userDocument ? this.mapper.toEntity(userDocument) : undefined;
   }
-  async save(user: UserAccount): Promise<UserAccount> {
-    const userDocument = await this.userModel.findByIdAndUpdate(
-      user.id,
-      { user },
+  async save(userAccount: UserAccount): Promise<UserAccount> {
+    const model = this.mapper.toModel(userAccount);
+    const userDocument = await this.userModel.findOneAndUpdate(
+      { id: userAccount.id },
+      { $set: model },
       { new: true },
     );
     return userDocument ? this.mapper.toEntity(userDocument) : undefined;

@@ -2,7 +2,7 @@ import { Inject } from "@nestjs/common";
 
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import {
-  UserAccountResponse,
+  GetUserAccountResponse,
   userResponseFromDomain,
 } from "@users/application/responses/user-account.response";
 import {
@@ -16,13 +16,13 @@ export class GetUserByUidQuery {
 
 @QueryHandler(GetUserByUidQuery)
 export class GetUserByUidQueryHandler
-  implements IQueryHandler<GetUserByUidQuery, UserAccountResponse>
+  implements IQueryHandler<GetUserByUidQuery, GetUserAccountResponse>
 {
   constructor(
     @Inject(USER_ACCOUNT_REPOSITORY)
     private readonly userAccountRepository: UserAccountRepository,
   ) {}
-  async execute(query: GetUserByUidQuery): Promise<UserAccountResponse> {
+  async execute(query: GetUserByUidQuery): Promise<GetUserAccountResponse> {
     const userAccount = await this.userAccountRepository.findUserAccountByUid(
       query.uid,
     );

@@ -5,7 +5,6 @@ export interface UserProps {
   uid?: string;
   name: string;
   email: string;
-  emailVerification?: boolean;
   profilePicture?: string;
   language: LanguageEnum;
   password?: string;
@@ -53,11 +52,6 @@ export class UserAccount {
   get id() {
     return this.props.id;
   }
-
-  get emailVerification() {
-    return this.props.emailVerification;
-  }
-
   get uid() {
     return this.props.uid;
   }
@@ -68,6 +62,8 @@ export class UserAccount {
   update(props: Partial<UserAccount>) {
     this.name = props.name || this.props.name;
     this.email = props.email || this.props.email;
+    this.profilePicture = props.profilePicture || this.props.language;
+    this.language = props.language || this.props.language;
   }
   static create(props: UserProps): UserAccount {
     return new UserAccount({

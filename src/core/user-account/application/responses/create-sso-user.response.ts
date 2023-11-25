@@ -1,6 +1,6 @@
 import { UserAccount } from "../../domain/entities/user-account.entity";
 import { LanguageEnum } from "@users/domain/enums/language.enum";
-export interface GetUserAccountResponse {
+export interface CreateUserSSOAccountResponse {
   id: string;
   uid: string;
   name: string;
@@ -9,9 +9,9 @@ export interface GetUserAccountResponse {
   profilePicture: string;
 }
 
-export const userResponseFromDomain = (
+export const userSSOResponseFromDomain = (
   entity: UserAccount,
-): GetUserAccountResponse => ({
+): CreateUserSSOAccountResponse => ({
   id: entity.id.toString(),
   uid: entity.uid,
   name: entity.name,

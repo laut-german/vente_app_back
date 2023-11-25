@@ -24,6 +24,7 @@ export class AppModule {
         "v1/user-account/register",
         "v1/user-account/register-sso",
         "v1/user-account/:uid/exists",
+        "v1/user-account/:id/verify-email/:flag",
       )
       .forRoutes("/");
   }

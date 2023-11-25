@@ -1,9 +1,20 @@
-import { UserDocument } from "./user-account.schema";
+import {UserDocument, UserModel} from "./user-account.schema";
 import { UserAccount, UserProps } from "@users/domain/entities/user-account.entity";
 
 export class UserAccountMapper {
   toEntity = (document: UserDocument): UserAccount => {
     return UserAccount.create(this.userDocumentToProps(document));
+  };
+
+  toModel = (userAccount: UserAccount): UserModel => {
+    return {
+      id: userAccount.id,
+      uid: userAccount.uid,
+      name: userAccount.name,
+      email: userAccount.email,
+      profilePicture: userAccount.profilePicture,
+      language: userAccount.language,
+    };
   };
   private userDocumentToProps(document: UserDocument): UserProps {
     return {
@@ -13,7 +24,6 @@ export class UserAccountMapper {
       email: document.email,
       profilePicture: document.profilePicture,
       language: document.language,
-      emailVerification: document.emailVerification,
     };
   }
 }
