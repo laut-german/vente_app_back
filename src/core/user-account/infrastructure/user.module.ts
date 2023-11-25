@@ -7,7 +7,7 @@ import {
   UserAccountSchema,
 } from "./store/schemas/user-account.schema";
 import { USER_ACCOUNT_REPOSITORY } from "../domain/storage/user-account.repository";
-import { MongoUserRepository } from "../infrastructure/store/repositories/mongo-user.repository";
+import { MongoUserAccountRepository } from "./store/repositories/mongo-user-account.repository";
 import { CreateUserCommandHandler } from "../application/commands/create-user-account.command";
 import { AUTH_PROVIDER_REPOSITORY } from "../domain/storage/auth-provider.repository";
 import { FirebaseProviderRepository } from "./store/repositories/firebase-provider.repository";
@@ -39,7 +39,7 @@ import {
   providers: [
     {
       provide: USER_ACCOUNT_REPOSITORY,
-      useClass: MongoUserRepository,
+      useClass: MongoUserAccountRepository,
     },
     {
       provide: AUTH_PROVIDER_REPOSITORY,

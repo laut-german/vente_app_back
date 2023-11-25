@@ -1,7 +1,5 @@
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { UserAccount } from "@users/domain/entities/user-account.entity";
-import { UserAccountMapper } from "../schemas/user-account.mapper";
 import { EmailVerificationRepository } from "@users/domain/storage/email-verification.repository";
 import { EmailAccountVerification } from "@users/domain/entities/email-acc-verification.entitity";
 import { AccountEmailVerificationDocument } from "@users/infrastructure/store/schemas/account-email-verification.schema";
@@ -16,14 +14,14 @@ export class MongoVerificationEmailRepository
   ) {}
 
   async create(
-    accEmailVerif: EmailAccountVerification,
+    entity: EmailAccountVerification,
   ): Promise<EmailAccountVerification> {
     const emailAccountVerificationDocument =
       await new this.accEmailVerificationModel({
-        userAccountId: accEmailVerif.userAccountId,
-        email: accEmailVerif.email,
-        expiresAt: accEmailVerif.expiresAt,
-        verificationToken: accEmailVerif.verificationToken,
+        userAccountId: entity.userAccountId,
+        email: entity.email,
+        expiresAt: entity.expiresAt,
+        verificationToken: entity.verificationToken,
       }).save();
     return this.mapper.toEntity(emailAccountVerificationDocument);
   }
@@ -43,12 +41,12 @@ export class MongoVerificationEmailRepository
   }
 
   async save(
-    accEmailVerif: EmailAccountVerification,
+    entity: EmailAccountVerification,
   ): Promise<EmailAccountVerification> {
-    const model = this.mapper.toModel(accEmailVerif);
+    const model = this.mapper.toModel(entity);
     const emailAccountVerificationDocument =
       await this.accEmailVerificationModel.findOneAndUpdate(
-        { id: accEmailVerif.id },
+        { id: entity.id },
         { $set: model },
         { new: true },
       );
