@@ -5,7 +5,6 @@ import {
   UserAccountRepository,
 } from "../../domain/storage/user-account.repository";
 
-import { CrateUserAccountResponse } from "../responses/crate-user-account.response";
 import {
   AUTH_PROVIDER_REPOSITORY,
   AuthProviderRepository,
@@ -13,7 +12,7 @@ import {
 import { UserAccountDoesNotExistError } from "@users/domain/errors/user-account-does-not-exist.error";
 import {
   emailVerificationResponseFromDomain,
-  EmailVerificationUpdateResponse
+  EmailVerificationUpdateResponse,
 } from "@users/application/responses/email-verification-update.response";
 import { FirebaseAccountNotUpdatedError } from "@users/domain/errors/firebase-account-not-updated.error";
 import {
@@ -21,13 +20,11 @@ import {
   EmailVerificationRepository,
 } from "@users/domain/storage/email-verification.repository";
 import { StatusEmailVerificationEnum } from "@users/domain/enums/status-email-verification.enum";
-import {AccEmailTokenExpiredError} from "@users/domain/errors/acc-email-token-expired.error";
+import { AccEmailTokenExpiredError } from "@users/domain/errors/acc-email-token-expired.error";
+import {AuthService} from "@users/application/auth.service";
 
 export class EmailAccVerificationUpdateCommand {
-  constructor(
-    public readonly id: string,
-    public readonly emailVerified: boolean,
-  ) {}
+  constructor(public readonly token: string) {}
 }
 
 @CommandHandler(EmailAccVerificationUpdateCommand)
@@ -46,21 +43,23 @@ export class EmailAccVerificationUpdateCommandHandler
     private authProviderRepository: AuthProviderRepository,
     @Inject(EMAIL_VERIFICATION_REPOSITORY)
     private readonly emailVerificationRepository: EmailVerificationRepository,
+    private readonly authService: AuthService,
   ) {}
 
   async execute({
-    id,
-    emailVerified,
+    token,
   }: EmailAccVerificationUpdateCommand): Promise<EmailVerificationUpdateResponse> {
-    const userAccount =
-      await this.userAccountRepository.findUserAccountById(id);
+    const payload = this.authService.decodeEmailVerificationToken(token);
+    const userAccount = await this.userAccountRepository.findUserAccountById(
+      payload?.userAccountId,
+    );
 
     if (!userAccount) {
       throw new UserAccountDoesNotExistError();
     }
     try {
       await this.authProviderRepository.updateAccount(userAccount.uid, {
-        emailVerified,
+        emailVerified: true,
       });
     } catch (error) {
       this.logger.error(`An error occurred, ${error}`);
@@ -76,10 +75,7 @@ export class EmailAccVerificationUpdateCommandHandler
       throw new AccEmailTokenExpiredError();
     }
     verificationRecord.update({
-      status:
-        emailVerified === true
-          ? StatusEmailVerificationEnum.Verified
-          : StatusEmailVerificationEnum.Unverified,
+      status: StatusEmailVerificationEnum.Verified,
     });
     const updatedEmailVerification =
       await this.emailVerificationRepository.save(verificationRecord);

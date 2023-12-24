@@ -12,6 +12,7 @@ import { CheckIfUserExistsOutDto } from "@users/infrastructure/http/common-dtos/
 import { EmailAccVerificationUpdateCommand } from "@users/application/commands/email-acc-verification-update.command";
 import { EmailVerificationUpdateResponse } from "@users/application/responses/email-verification-update.response";
 import { VerifyEmailOutDto } from "@users/infrastructure/http/common-dtos/verify-email-out.dto";
+import {TokenInDto} from "@users/infrastructure/http/common-dtos/token-in.dto";
 
 @ApiTags("v1/user-account")
 @Controller("v1/user-account")
@@ -75,17 +76,16 @@ export class UserAccountController {
     >(new GetUserByUidQuery(uid));
     return new CheckIfUserExistsOutDto(userAccount);
   }
-  @Patch(":id/verify-email/:flag")
+  @Patch("verify-email")
   @ApiOperation({ description: "set email verification to true" })
   @ApiOkResponse({ type: [VerifyEmailOutDto] })
   async updateVerificationMail(
-    @Param("id") id: string,
-    @Param("flag", ParseBoolPipe) flag: boolean,
+    @Body() tokenDto: TokenInDto,
   ): Promise<VerifyEmailOutDto> {
     const emailVerificationUpdateResponse = await this.commandBus.execute<
       EmailAccVerificationUpdateCommand,
       EmailVerificationUpdateResponse
-    >(new EmailAccVerificationUpdateCommand(id, flag));
+    >(new EmailAccVerificationUpdateCommand(tokenDto.token));
 
     return new VerifyEmailOutDto(emailVerificationUpdateResponse);
   }

@@ -88,6 +88,20 @@ export class AuthService {
     return jwt.sign(payload, this.jwtSecretKey, { expiresIn: "7d" });
   }
 
+  decodeEmailVerificationToken(
+    token,
+  ): null | { userAccountId: string; email: string } {
+    try {
+      return jwt.verify(token, this.jwtSecretKey) as {
+        userAccountId: string;
+        email: string;
+      };
+    } catch (error) {
+      this.logger.error(error);
+      return null;
+    }
+  }
+
   private sendExceptionResponse(
     messageException: string,
     status: StatusCodes,
