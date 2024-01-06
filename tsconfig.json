@@ -17,8 +17,9 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "esModuleInterop": true,
     "paths": {
-      "@users/*": ["src/core/user-account/*"],
+      "@users/*": ["src/core/user-account/*"]
     }
   }
 }

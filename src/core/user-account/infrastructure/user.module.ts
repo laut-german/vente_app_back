@@ -21,6 +21,8 @@ import {
   AccountEmailVerificationDocument,
   EmailVerificationSchema,
 } from "@users/infrastructure/store/schemas/account-email-verification.schema";
+import { MAILER_SERVICE } from "../../../shared/domain/mailer.service";
+import { MailjetMailerService } from "../../../shared/infrastructure/mailjet-mailer.service";
 
 @Module({
   imports: [
@@ -48,6 +50,10 @@ import {
     {
       provide: EMAIL_VERIFICATION_REPOSITORY,
       useClass: MongoVerificationEmailRepository,
+    },
+    {
+      provide: MAILER_SERVICE,
+      useClass: MailjetMailerService,
     },
     CreateUserCommandHandler,
     CreateUserSSOAccountCommandHandler,

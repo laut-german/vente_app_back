@@ -22,6 +22,7 @@ import {
   EmailVerificationRepository,
 } from "@users/domain/storage/email-verification.repository";
 import { AuthService } from "@users/application/auth.service";
+import {MAILER_SERVICE, MailerService} from "../../../../shared/domain/mailer.service";
 export class CreateUserAccountCommand {
   constructor(
     public readonly name: string,
@@ -45,6 +46,8 @@ export class CreateUserCommandHandler
     @Inject(EMAIL_VERIFICATION_REPOSITORY)
     private readonly emailVerificationRepository: EmailVerificationRepository,
     private readonly authService: AuthService,
+    @Inject(MAILER_SERVICE)
+        private readonly mailService: MailerService,
   ) {}
 
   async execute({
@@ -93,6 +96,7 @@ export class CreateUserCommandHandler
           verificationToken,
         }),
       );
+    await this.mailService.send(null);
     return userResponseFromDomain(userAccount, emailVerificationRecord);
   }
 }

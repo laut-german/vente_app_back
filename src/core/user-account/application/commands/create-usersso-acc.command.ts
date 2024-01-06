@@ -26,7 +26,8 @@ export class CreateUserSSOAccountCommand {
 
 @CommandHandler(CreateUserSSOAccountCommand)
 export class CreateUserSSOAccountCommandHandler
-  implements ICommandHandler<CreateUserSSOAccountCommand, CreateUserSSOAccountResponse>
+  implements
+    ICommandHandler<CreateUserSSOAccountCommand, CreateUserSSOAccountResponse>
 {
   constructor(
     @Inject(USER_ACCOUNT_REPOSITORY)
