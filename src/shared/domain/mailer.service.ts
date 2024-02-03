@@ -1,4 +1,4 @@
-import { EmailMessage } from "./email.types";
+import { EmailMessage, Response } from "./email.types";
 
 export const MAILER_SERVICE = Symbol();
 
@@ -9,4 +9,5 @@ export const MAILER_SERVICE = Symbol();
 
 export interface MailerService {
   send(message: EmailMessage): Promise<Response>;
+  readHtmlTemplate(filename: string): string;
 }

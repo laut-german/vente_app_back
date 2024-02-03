@@ -22,7 +22,14 @@ import {
   EmailVerificationRepository,
 } from "@users/domain/storage/email-verification.repository";
 import { AuthService } from "@users/application/auth.service";
-import {MAILER_SERVICE, MailerService} from "../../../../shared/domain/mailer.service";
+import {
+  MAILER_SERVICE,
+  MailerService,
+} from "../../../../shared/domain/mailer.service";
+import {
+  MAIL_BUILDER_SERVICE,
+  MailBuilderService,
+} from "../../../../shared/domain/mail-builder.service";
 export class CreateUserAccountCommand {
   constructor(
     public readonly name: string,
@@ -47,7 +54,9 @@ export class CreateUserCommandHandler
     private readonly emailVerificationRepository: EmailVerificationRepository,
     private readonly authService: AuthService,
     @Inject(MAILER_SERVICE)
-        private readonly mailService: MailerService,
+    private readonly mailService: MailerService,
+    @Inject(MAIL_BUILDER_SERVICE)
+    private readonly mailBuilderService: MailBuilderService,
   ) {}
 
   async execute({
@@ -96,7 +105,16 @@ export class CreateUserCommandHandler
           verificationToken,
         }),
       );
-    await this.mailService.send(null);
+    await this.mailService.send({
+      to: [
+        { email: "segtox2@gmail.com" },
+        { email: "zlautarocripto@gmail.com" },
+      ],
+      HTMLPart: this.mailBuilderService.build(
+        this.mailService.readHtmlTemplate("account-activation"),
+      ),
+      subject: "Account activated",
+    });
     return userResponseFromDomain(userAccount, emailVerificationRecord);
   }
 }

@@ -23,6 +23,8 @@ import {
 } from "@users/infrastructure/store/schemas/account-email-verification.schema";
 import { MAILER_SERVICE } from "../../../shared/domain/mailer.service";
 import { MailjetMailerService } from "../../../shared/infrastructure/mailjet-mailer.service";
+import { MAIL_BUILDER_SERVICE } from "../../../shared/domain/mail-builder.service";
+import { HandlebarsMailBuilderService } from "../../../shared/infrastructure/handlebars-mail-builder.service";
 
 @Module({
   imports: [
@@ -54,6 +56,10 @@ import { MailjetMailerService } from "../../../shared/infrastructure/mailjet-mai
     {
       provide: MAILER_SERVICE,
       useClass: MailjetMailerService,
+    },
+    {
+      provide: MAIL_BUILDER_SERVICE,
+      useClass: HandlebarsMailBuilderService,
     },
     CreateUserCommandHandler,
     CreateUserSSOAccountCommandHandler,
