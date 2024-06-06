@@ -4,6 +4,10 @@
 ![npm Version](https://img.shields.io/badge/npm-%3E%3D6.0.0-blue)
 ![License: GPL v3.0](https://img.shields.io/badge/license-GPL%20v3.0-red)
 
+## Work In Progress (WIP)
+
+⚠️ **This project is currently a Work In Progress (WIP). Features may be incomplete and changes may occur frequently.** ⚠️
+
 ## Description
 Backend for an event management and attendance application. This application is a Work In Progress (WIP).
 
