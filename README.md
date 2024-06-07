@@ -8,6 +8,10 @@
 
 ⚠️ **This project is currently a Work In Progress (WIP). Features may be incomplete and changes may occur frequently.** ⚠️
 
+### Environment Variables
+
+For security reasons, the `.env` file is not included in the repository. If you need the `.env` file to run the application, please contact me via email at [laut.german@gmail.com](mailto:laut.german@gmail.com).
+
 ## Description
 Backend for an event management and attendance application. This application is a Work In Progress (WIP).
 
